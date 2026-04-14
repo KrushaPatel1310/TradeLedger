@@ -1,0 +1,511 @@
+/* ===== Global ===== */
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:linear-gradient(135deg,#020617,#0f172a,#020617);
+color:white;
+}
+
+/* ===== Main Content ===== */
+
+.content{
+padding:40px;
+margin-left:240px;
+}
+
+/* ===== Sidebar ===== */
+
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+width:230px;
+height:100vh;
+background:#020617;
+padding:30px 20px;
+}
+
+.logo{
+margin-bottom:40px;
+font-size:30px;
+font-weight:bold;
+line-height:1.2;
+}
+
+/* ===== Sidebar Menu ===== */
+
+.menuItem{
+display:flex;
+align-items:center;
+gap:14px;
+color:#94a3b8;
+text-decoration:none;
+margin:20px 0;
+font-size:22px;
+}
+
+.menuItem:hover{
+color:white;
+}
+
+.menuIcon{
+width:24px;
+height:24px;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-shrink:0;
+}
+
+/* ===== Dashboard Title ===== */
+
+.dashboardTitle{
+font-size:34px;
+margin-bottom:20px;
+}
+
+/* ===== Market Index Bar ===== */
+
+.marketIndexBar{
+display:flex;
+gap:30px;
+background:#0f172a;
+padding:15px;
+border-radius:10px;
+margin-bottom:25px;
+}
+
+.indexItem{
+display:flex;
+gap:10px;
+}
+
+.indexUp{
+color:#22c55e;
+}
+
+.indexDown{
+color:#ef4444;
+}
+
+/* ===== Dashboard Layout ===== */
+
+.dashboardLayout{
+display:flex;
+gap:25px;
+}
+
+/* ===== Market Table ===== */
+
+.marketTable{
+flex:3;
+background:#0f172a;
+padding:20px;
+border-radius:12px;
+}
+
+.marketTable table{
+width:100%;
+border-collapse:collapse;
+}
+
+.marketTable th{
+text-align:left;
+padding:12px;
+border-bottom:1px solid #1e293b;
+}
+
+.marketTable td{
+padding:12px;
+}
+
+/* ===== Right Panel ===== */
+
+.rightPanel{
+flex:1;
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+/* ===== Info Boxes ===== */
+
+.infoBox{
+background:#0f172a;
+padding:20px;
+border-radius:12px;
+}
+
+.marketRow{
+display:flex;
+justify-content:space-between;
+margin:8px 0;
+}
+
+/* ===== Colors ===== */
+
+.green{
+color:#22c55e;
+}
+
+.red{
+color:#ef4444;
+}
+.settingsRow{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 0;
+border-bottom:1px solid #1e293b;
+font-size:18px;
+}
+
+.settingsRow input{
+width:20px;
+height:20px;
+cursor:pointer;
+}
+.settingsRow{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 0;
+font-size:18px;
+}
+
+/* Toggle Switch */
+
+.toggle{
+width:50px;
+height:26px;
+border-radius:20px;
+cursor:pointer;
+position:relative;
+transition:0.3s;
+}
+
+.toggle.on{
+background:#4CAF50;
+}
+
+.toggle.off{
+background:#555;
+}
+
+.circle{
+width:22px;
+height:22px;
+background:white;
+border-radius:50%;
+position:absolute;
+top:2px;
+left:2px;
+transition:0.3s;
+}
+
+.toggle.on .circle{
+left:26px;
+}
+/* WALLET CARD */
+
+.walletCard{
+background:#0f172a;
+border-radius:14px;
+padding:30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:20px;
+box-shadow:0 0 20px rgba(0,0,0,0.3);
+}
+
+.walletLabel{
+opacity:0.7;
+font-size:16px;
+}
+
+.walletAmount{
+font-size:40px;
+color:#22c55e;
+}
+
+.walletIcon{
+font-size:40px;
+}
+
+/* WALLET STATS */
+
+.walletStats{
+display:flex;
+gap:20px;
+margin-top:25px;
+}
+
+.walletStatBox{
+flex:1;
+background:#0f172a;
+padding:20px;
+border-radius:12px;
+}
+
+.walletStatBox h2{
+margin-top:8px;
+}
+
+.income h2{
+color:#22c55e;
+}
+
+.expense h2{
+color:#ef4444;
+}
+
+/* WALLET TABLE */
+
+.walletTable{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+background:#0f172a;
+border-radius:12px;
+overflow:hidden;
+}
+
+.walletTable th{
+text-align:left;
+padding:14px;
+border-bottom:1px solid #1e293b;
+}
+
+.walletTable td{
+padding:14px;
+}
+/* TRADE PANEL */
+
+.tradePanel{
+background:#0f172a;
+padding:25px;
+border-radius:14px;
+width:280px;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+.tradeTitle{
+margin-bottom:20px;
+font-size:22px;
+}
+
+.tradeInputBox{
+display:flex;
+flex-direction:column;
+margin-bottom:15px;
+}
+
+.tradeInputBox label{
+margin-bottom:5px;
+font-size:14px;
+opacity:0.7;
+}
+
+.tradeInputBox input{
+padding:10px;
+border-radius:8px;
+border:none;
+font-size:16px;
+outline:none;
+}
+
+.tradeValue{
+margin-bottom:20px;
+font-weight:bold;
+}
+
+.tradeButtons{
+display:flex;
+gap:10px;
+}
+
+.buyBtn{
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+background:#22c55e;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.buyBtn:hover{
+background:#16a34a;
+}
+
+.sellBtn{
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+background:#ef4444;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.sellBtn:hover{
+background:#dc2626;
+}.timeFilters{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
+.timeFilters button{
+background:#0f172a;
+color:white;
+border:1px solid #1e293b;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+transition:0.2s;
+font-weight:600;
+}
+
+.timeFilters button:hover{
+background:#1e293b;
+}
+
+.timeFilters button:active{
+background:#22c55e;
+border-color:#22c55e;
+}
+.stockPrice{
+display:flex;
+align-items:center;
+gap:15px;
+margin-top:5px;
+}
+
+.priceValue{
+font-size:32px;
+font-weight:700;
+color:white;
+}
+
+.priceUp{
+color:#22c55e;
+font-size:18px;
+font-weight:600;
+}
+
+.priceDown{
+color:#ef4444;
+font-size:18px;
+font-weight:600;
+}
+.authForm{
+display:flex;
+flex-direction:column;
+gap:15px;
+width:300px;
+margin-top:30px;
+}
+
+.authForm input{
+padding:10px;
+border-radius:8px;
+border:none;
+}
+
+.authForm button{
+padding:10px;
+border:none;
+border-radius:8px;
+background:#22c55e;
+color:white;
+cursor:pointer;
+}
+.authContainer{
+width:350px;
+margin:100px auto;
+background:#0f172a;
+padding:30px;
+border-radius:10px;
+}
+
+.authContainer h1{
+margin-bottom:20px;
+}
+
+.authForm{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.authForm input{
+padding:12px;
+border:none;
+border-radius:6px;
+background:#020617;
+color:white;
+}
+
+.authForm button{
+padding:12px;
+border:none;
+border-radius:6px;
+background:#22c55e;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.authLink{
+margin-top:10px;
+font-size:14px;
+}
+.authBox{
+width:380px;
+background:#0f172a;
+padding:35px;
+border-radius:12px;
+margin:120px auto;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+.authBox h2{
+margin-bottom:20px;
+text-align:center;
+}
+
+.authBox form{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.authBox input{
+padding:12px;
+border-radius:8px;
+border:none;
+background:#020617;
+color:white;
+}
+
+.authBox button{
+padding:12px;
+border:none;
+border-radius:8px;
+background:#22c55e;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.authBox p{
+margin-top:15px;
+text-align:center;
+}
