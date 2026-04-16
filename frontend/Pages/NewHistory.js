@@ -3,38 +3,67 @@ import React, { useEffect, useState } from "react";
 function History(){
 
 const [history,setHistory] = useState([]);
+const [loading,setLoading] = useState(true);
+
+
+/* FETCH FROM BACKEND */
 
 useEffect(()=>{
 
-const savedHistory = JSON.parse(localStorage.getItem("history")) || [];
-setHistory(savedHistory);
+fetchHistory();
 
 },[]);
+
+
+async function fetchHistory(){
+
+try{
+
+const res = await fetch("http://localhost:8080/api/history");
+
+const data = await res.json();
+
+setHistory(data);
+
+}catch(err){
+
+console.error("Error fetching history");
+
+}finally{
+setLoading(false);
+}
+
+}
+
 
 return(
 
 <div className="content">
 
-<h1 className="dashboardTitle">Transaction History</h1>
+<h1>Transaction History</h1>
 
-{history.length === 0 ? (
+<div className="historyBox">
 
-<p>No transactions yet.</p>
+{loading ? (
+
+<p>Loading...</p>
+
+) : history.length === 0 ? (
+
+<p>No transactions yet</p>
 
 ) : (
 
-<table className="marketTable">
+<table>
 
 <thead>
-
 <tr>
-<th>Stock</th>
 <th>Type</th>
-<th>Price</th>
+<th>Stock</th>
 <th>Quantity</th>
-<th>Profit/Loss</th>
+<th>Price</th>
+<th>Date</th>
 </tr>
-
 </thead>
 
 <tbody>
@@ -43,19 +72,17 @@ return(
 
 <tr key={index}>
 
-<td>{item.name}</td>
-
-<td className={item.type==="BUY" ? "green" : "red"}>
+<td className={item.type === "BUY" ? "green":"red"}>
 {item.type}
 </td>
 
-<td>₹{item.price}</td>
+<td>{item.name}</td>
 
 <td>{item.qty}</td>
 
-<td className={item.profit >= 0 ? "green":"red"}>
-₹{item.profit}
-</td>
+<td>₹{item.price}</td>
+
+<td>{item.time}</td>
 
 </tr>
 
@@ -66,6 +93,8 @@ return(
 </table>
 
 )}
+
+</div>
 
 </div>
 
