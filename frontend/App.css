@@ -542,3 +542,34 @@ color:white;
 font-weight:bold;
 cursor:pointer;
 }
+.historyBox{
+background:#0f172a;
+padding:20px;
+border-radius:12px;
+margin-top:20px;
+}
+
+.historyBox table{
+width:100%;
+border-collapse:collapse;
+}
+
+.historyBox th{
+text-align:left;
+padding:12px;
+border-bottom:1px solid #1e293b;
+}
+
+.historyBox td{
+padding:12px;
+}
+
+.green{
+color:#22c55e;
+font-weight:bold;
+}
+
+.red{
+color:#ef4444;
+font-weight:bold;
+}
