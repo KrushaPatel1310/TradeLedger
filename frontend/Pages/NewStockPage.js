@@ -35,172 +35,82 @@ setStock(foundStock);
 
 
 
-/* GENERATE CHART */
+/* INITIAL GRAPH (FIXED - NO WARNING) */
 
-function generateChart(type){
+useEffect(()=>{
 
-let data = [];
-let basePrice = stock ? stock.price : 100;
+if(!stock) return;
 
-let points = 24;
+let points = [];
+let base = stock.price;
 
-if(type==="1D") points = 24;
-if(type==="1M") points = 40;
-if(type==="1Y") points = 80;
-if(type==="2Y") points = 120;
-if(type==="5Y") points = 160;
-if(type==="ALL") points = 220;
+let length = 24;
 
-for(let i=0;i<points;i++){
+for(let i=0;i<length;i++){
 
-// wave movement
-let wave = Math.sin(i/3) * 120;
+const wave = Math.sin(i/3) * 80;
+const random = (Math.random()-0.5) * 150;
 
-// random volatility
-let random = (Math.random()-0.5) * 200;
+base = base + wave + random;
 
-// occasional spike
-if(Math.random() > 0.92){
-random += (Math.random()-0.5)*600;
-}
-
-basePrice += wave + random;
-
-data.push({
+points.push({
 time:i,
-price:Math.max(100, Math.round(basePrice))
+price:Math.max(100, Math.round(base))
 });
 
 }
 
-setChartData(data);
+setChartData(points);
 
-}
-
-
-/* INITIAL CHART */
-
-useEffect(()=>{
-if(stock){
-generateChart("1D");
-}
 },[stock]);
 
 
 
-/* BUY STOCK */
+/* GRAPH FUNCTION (FOR BUTTONS) */
+
+function generateChart(type){
+
+if(!stock) return;
+
+let points = [];
+let base = stock.price;
+
+let length = 24;
+
+if(type==="1D") length=24;
+if(type==="1M") length=30;
+if(type==="1Y") length=50;
+if(type==="2Y") length=80;
+if(type==="5Y") length=120;
+if(type==="ALL") length=160;
+
+for(let i=0;i<length;i++){
+
+const wave = Math.sin(i/3) * 80;
+const random = (Math.random()-0.5) * 150;
+
+base = base + wave + random;
+
+points.push({
+time:i,
+price:Math.max(100, Math.round(base))
+});
+
+}
+
+setChartData(points);
+}
+
+
+
+/* BUTTONS → API PLACEHOLDER */
 
 function buyStock(){
-
-if(!stock) return;
-
-const wallet = Number(localStorage.getItem("walletBalance")) || 100000;
-
-const totalCost = stock.price * qty;
-
-if(totalCost > wallet){
-alert("Not enough wallet balance");
-return;
+alert("Backend API: BUY STOCK");
 }
-
-const newBalance = wallet - totalCost;
-
-localStorage.setItem("walletBalance",newBalance);
-
-
-/* UPDATE PORTFOLIO */
-
-let portfolio = JSON.parse(localStorage.getItem("portfolio")) || [];
-
-const existing = portfolio.find(p=>p.name===stock.name);
-
-if(existing){
-existing.qty += qty;
-}else{
-portfolio.push({
-name:stock.name,
-qty:qty,
-price:stock.price
-});
-}
-
-localStorage.setItem("portfolio",JSON.stringify(portfolio));
-
-
-/* UPDATE HISTORY */
-
-let history = JSON.parse(localStorage.getItem("history")) || [];
-
-history.unshift({
-type:"BUY",
-name:stock.name,
-qty:qty,
-price:stock.price,
-time:new Date().toLocaleString()
-});
-
-localStorage.setItem("history",JSON.stringify(history));
-
-alert(`Bought ${qty} shares of ${stock.name}`);
-
-}
-
-
-
-/* SELL STOCK */
 
 function sellStock(){
-
-if(!stock) return;
-
-let portfolio = JSON.parse(localStorage.getItem("portfolio")) || [];
-
-const existing = portfolio.find(p=>p.name===stock.name);
-
-if(!existing || existing.qty < qty){
-alert("Not enough shares to sell");
-return;
-}
-
-
-/* UPDATE WALLET */
-
-const wallet = Number(localStorage.getItem("walletBalance")) || 100000;
-
-const sellValue = stock.price * qty;
-
-const newBalance = wallet + sellValue;
-
-localStorage.setItem("walletBalance",newBalance);
-
-
-/* UPDATE PORTFOLIO */
-
-existing.qty -= qty;
-
-if(existing.qty === 0){
-portfolio = portfolio.filter(p=>p.name !== stock.name);
-}
-
-localStorage.setItem("portfolio",JSON.stringify(portfolio));
-
-
-/* UPDATE HISTORY */
-
-let history = JSON.parse(localStorage.getItem("history")) || [];
-
-history.unshift({
-type:"SELL",
-name:stock.name,
-qty:qty,
-price:stock.price,
-time:new Date().toLocaleString()
-});
-
-localStorage.setItem("history",JSON.stringify(history));
-
-alert(`Sold ${qty} shares of ${stock.name}`);
-
+alert("Backend API: SELL STOCK");
 }
 
 
@@ -220,6 +130,8 @@ return(
 return(
 
 <div className="content">
+
+{/* HEADER */}
 
 <div className="stockHeader">
 
@@ -243,6 +155,8 @@ return(
 
 
 
+{/* FILTER BUTTONS */}
+
 <div className="timeFilters">
 
 <button onClick={()=>generateChart("1D")}>1D</button>
@@ -255,6 +169,8 @@ return(
 </div>
 
 
+
+{/* GRAPH */}
 
 <div style={{width:"100%",height:350,marginTop:20}}>
 
@@ -288,6 +204,8 @@ dot={false}
 
 <div className="stockLayout">
 
+
+{/* TRADE PANEL */}
 
 <div className="tradePanel">
 
@@ -325,6 +243,8 @@ Sell
 </div>
 
 
+
+{/* COMPANY INFO */}
 
 <div className="companyInfo">
 
