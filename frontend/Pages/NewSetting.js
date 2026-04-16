@@ -2,103 +2,74 @@ import React, { useState } from "react";
 
 function Settings(){
 
-const [settings,setSettings] = useState({
-price:true,
-news:true,
-buy:true,
-sell:true,
-portfolio:true,
-crash:true
-});
-
-function toggle(key){
-setSettings(prev=>({
-...prev,
-[key]:!prev[key]
-}));
-}
+const [notifications,setNotifications] = useState(true);
+const [news,setNews] = useState(true);
+const [priceAlert,setPriceAlert] = useState(true);
 
 return(
 
 <div className="content">
 
-<h1 className="dashboardTitle">Settings</h1>
+<h1>Settings</h1>
 
-<h2>Trading Instructions</h2>
+<div className="settingsBox">
+
+<h3>Account Settings</h3>
+
+<p>Initial Wallet Balance: ₹20,000</p>
+<p>Trading Mode: Virtual Simulation</p>
+
+</div>
+
+
+<div className="settingsBox">
+
+<h3>Notifications</h3>
+
+<div className="settingList">
+
+<div className="settingItem">
+<span>Trade Alerts</span>
+<button onClick={()=>setNotifications(!notifications)}
+className={notifications ? "toggleOn" : "toggleOff"}>
+{notifications ? "ON" : "OFF"}
+</button>
+</div>
+
+<div className="settingItem">
+<span>Market News</span>
+<button onClick={()=>setNews(!news)}
+className={news ? "toggleOn" : "toggleOff"}>
+{news ? "ON" : "OFF"}
+</button>
+</div>
+
+<div className="settingItem">
+<span>Price Alerts</span>
+<button onClick={()=>setPriceAlert(!priceAlert)}
+className={priceAlert ? "toggleOn" : "toggleOff"}>
+{priceAlert ? "ON" : "OFF"}
+</button>
+</div>
+
+</div>
+
+</div>
+
+
+<div className="settingsBox">
+
+<h3>Instructions</h3>
 
 <ul>
-
-<li>This platform is a virtual stock trading simulator.</li>
-<li>New users receive ₹1,00,000 starting balance.</li>
-<li>Stock prices update automatically based on market simulation.</li>
-<li>News may increase or decrease stock prices.</li>
-<li>You can buy or sell stocks anytime from the dashboard.</li>
-<li>All trades are recorded in the History section.</li>
-
+<li>Start with ₹20,000 virtual balance</li>
+<li>Buy and sell stocks using market price</li>
+<li>Track your portfolio performance</li>
+<li>Monitor profit and loss</li>
+<li>Check history for transactions</li>
+<li>Use market news for decisions</li>
 </ul>
 
-
-<h2 style={{marginTop:"40px"}}>Notification Preferences</h2>
-
-
-<div className="settingsRow">
-<span>Stock Price Alerts</span>
-<div
-className={`toggle ${settings.price ? "on":"off"}`}
-onClick={()=>toggle("price")}
->
-<div className="circle"></div>
-</div>
-</div>
-
-<div className="settingsRow">
-<span>Market News Notifications</span>
-<div
-className={`toggle ${settings.news ? "on":"off"}`}
-onClick={()=>toggle("news")}
->
-<div className="circle"></div>
-</div>
-</div>
-
-<div className="settingsRow">
-<span>Buy Order Confirmation</span>
-<div
-className={`toggle ${settings.buy ? "on":"off"}`}
-onClick={()=>toggle("buy")}
->
-<div className="circle"></div>
-</div>
-</div>
-
-<div className="settingsRow">
-<span>Sell Order Confirmation</span>
-<div
-className={`toggle ${settings.sell ? "on":"off"}`}
-onClick={()=>toggle("sell")}
->
-<div className="circle"></div>
-</div>
-</div>
-
-<div className="settingsRow">
-<span>Portfolio Value Updates</span>
-<div
-className={`toggle ${settings.portfolio ? "on":"off"}`}
-onClick={()=>toggle("portfolio")}
->
-<div className="circle"></div>
-</div>
-</div>
-
-<div className="settingsRow">
-<span>Market Crash Alerts</span>
-<div
-className={`toggle ${settings.crash ? "on":"off"}`}
-onClick={()=>toggle("crash")}
->
-<div className="circle"></div>
-</div>
 </div>
 
 </div>
