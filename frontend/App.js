@@ -14,43 +14,30 @@ import Signup from "./pages/Signup";
 
 import "./App.css";
 
-function App(){
+function App() {
+  return (
+    <Router>
+      <div className="appLayout">
 
-return(
+        <Sidebar />
 
-<Router>
+        <div className="mainContent">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/stock/:name" element={<StockPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Routes>
+        </div>
 
-<div className="appLayout">
-
-<Sidebar/>
-
-<div className="mainContent">
-
-<Routes>
-
-<Route path="/" element={<Dashboard/>}/>
-<Route path="/portfolio" element={<Portfolio/>}/>
-<Route path="/history" element={<History/>}/>
-<Route path="/news" element={<News/>}/>
-<Route path="/settings" element={<Settings/>}/>
-<Route path="/wallet" element={<Wallet/>}/>
-<Route path="/stock/:name" element={<StockPage/>}/>
-
-{/* Login & Signup Routes */}
-
-<Route path="/login" element={<Login/>}/>
-<Route path="/signup" element={<Signup/>}/>
-
-</Routes>
-
-</div>
-
-</div>
-
-</Router>
-
-)
-
+      </div>
+    </Router>
+  );
 }
 
 export default App;
