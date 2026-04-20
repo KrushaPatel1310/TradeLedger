@@ -18,7 +18,7 @@ public class TradeController {
     @Autowired
     private PortfolioService portfolioService;
 
-    @PostMapping("/buy")
+    @GetMapping("/buy")
     public String buyStock(
         @RequestParam String name,
         @RequestParam int qty,
@@ -37,7 +37,7 @@ public class TradeController {
         return "Stock bought successfully";
     }
 
-    @PostMapping("/sell")
+    @GetMapping("/sell")
     public String sellStock(
         @RequestParam String name,
         @RequestParam int qty,
