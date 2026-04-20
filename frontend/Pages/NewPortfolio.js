@@ -1,60 +1,25 @@
 import React, { useEffect, useState } from "react";
 
 function Portfolio() {
+  const [items, setItems] = useState([]);
 
-const [portfolio, setPortfolio] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:8080/api/portfolio")
+      .then(res => res.json())
+      .then(data => setItems(data));
+  }, []);
 
-useEffect(() => {
+  return (
+    <div>
+      <h1>Portfolio</h1>
 
-const savedPortfolio = JSON.parse(localStorage.getItem("portfolio")) || [];
-setPortfolio(savedPortfolio);
-
-}, []);
-
-return (
-
-<div className="content">
-
-<h1 className="dashboardTitle">My Portfolio</h1>
-
-{portfolio.length === 0 ? (
-
-<p>No stocks purchased yet.</p>
-
-) : (
-
-<table className="portfolioTable">
-
-<thead>
-<tr>
-<th>Stock</th>
-<th>Quantity</th>
-<th>Price</th>
-</tr>
-</thead>
-
-<tbody>
-
-{portfolio.map((item, index) => (
-
-<tr key={index}>
-<td>{item.name}</td>
-<td>{item.qty}</td>
-<td>₹{item.price}</td>
-</tr>
-
-))}
-
-</tbody>
-
-</table>
-
-)}
-
-</div>
-
-);
-
+      {items.map((item, index) => (
+        <div key={index}>
+          {item.name} - Qty: {item.quantity}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default Portfolio;
