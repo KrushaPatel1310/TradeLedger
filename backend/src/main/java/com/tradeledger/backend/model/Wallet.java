@@ -1,15 +1,19 @@
 package com.tradeledger.backend.model;
 
-// Using Encapsulation concept for wallet balance security
+// Using Encapsulation to manage wallet balance securely
 public class Wallet {
 
-    private double balance = 100000;
+    private double balance = 20000;
 
     public double getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void deduct(double amount) {
+        balance -= amount;
+    }
+
+    public void add(double amount) {
+        balance += amount;
     }
 }
