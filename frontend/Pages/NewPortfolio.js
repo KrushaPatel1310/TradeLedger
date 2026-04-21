@@ -3,15 +3,30 @@ import React, { useEffect, useState } from "react";
 function Portfolio() {
 
   const [items, setItems] = useState([]);
+  const [stocks, setStocks] = useState([]);
 
   useEffect(() => {
-    loadPortfolio();
+    loadData();
   }, []);
 
-  function loadPortfolio() {
+  function loadData() {
+
     fetch("http://localhost:8080/api/portfolio")
       .then(res => res.json())
       .then(data => setItems(data));
+
+    fetch("http://localhost:8080/api/stocks")
+      .then(res => res.json())
+      .then(data => setStocks(data));
+  }
+
+  function getCurrentPrice(name) {
+
+    const stock = stocks.find(
+      s => s.name.toLowerCase() === name.toLowerCase()
+    );
+
+    return stock ? stock.price : 0;
   }
 
   return (
@@ -27,47 +42,64 @@ function Portfolio() {
 
       ) : (
 
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            background: "#0f172a",
-            color: "white",
-            borderRadius: "12px",
-            overflow: "hidden"
-          }}
-        >
+        <table style={tableStyle}>
 
           <thead>
             <tr style={{ background: "#1e293b" }}>
-              <th style={th}>Stock Name</th>
-              <th style={th}>Quantity</th>
+              <th style={th}>Stock</th>
+              <th style={th}>Qty</th>
               <th style={th}>Buy Price</th>
-              <th style={th}>Total Value</th>
+              <th style={th}>Current</th>
+              <th style={th}>Profit/Loss</th>
+              <th style={th}>Total</th>
             </tr>
           </thead>
 
           <tbody>
 
-            {items.map((item, index) => (
+            {items.map((item, index) => {
 
-              <tr key={index} style={{ textAlign: "center" }}>
+              const current = getCurrentPrice(item.name);
+              const profit =
+                (current - item.buyPrice) * item.quantity;
 
-                <td style={td}>{item.name}</td>
+              return (
 
-                <td style={td}>{item.quantity}</td>
+                <tr key={index} style={{ textAlign: "center" }}>
 
-                <td style={td}>
-                  ₹{item.buyPrice}
-                </td>
+                  <td style={td}>{item.name}</td>
 
-                <td style={td}>
-                  ₹{(item.quantity * item.buyPrice).toLocaleString()}
-                </td>
+                  <td style={td}>{item.quantity}</td>
 
-              </tr>
+                  <td style={td}>
+                    ₹{item.buyPrice}
+                  </td>
 
-            ))}
+                  <td style={td}>
+                    ₹{current}
+                  </td>
+
+                  <td
+                    style={{
+                      ...td,
+                      color:
+                        profit >= 0
+                          ? "#22c55e"
+                          : "#ef4444"
+                    }}
+                  >
+                    {profit >= 0 ? "+" : ""}
+                    ₹{profit.toLocaleString()}
+                  </td>
+
+                  <td style={td}>
+                    ₹{(current * item.quantity).toLocaleString()}
+                  </td>
+
+                </tr>
+              );
+
+            })}
 
           </tbody>
 
@@ -78,6 +110,15 @@ function Portfolio() {
     </div>
   );
 }
+
+const tableStyle = {
+  width: "100%",
+  borderCollapse: "collapse",
+  background: "#0f172a",
+  color: "white",
+  borderRadius: "12px",
+  overflow: "hidden"
+};
 
 const th = {
   padding: "15px",
