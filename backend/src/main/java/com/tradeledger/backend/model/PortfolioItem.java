@@ -1,6 +1,6 @@
 package com.tradeledger.backend.model;
 
-// Stores user owned stocks
+// Using OOP Class and Encapsulation concept to store purchased stock details
 public class PortfolioItem {
 
     private String name;
