@@ -1,12 +1,11 @@
 package com.tradeledger.backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tradeledger.backend.service.WalletService;
-import com.tradeledger.backend.service.PortfolioService;
+import com.tradeledger.backend.service.*;
 
-// Trade APIs for buy and sell
+// Using Controller and REST API concept to handle buy and sell stock requests
 @RestController
 @RequestMapping("/api/trade")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -18,6 +17,9 @@ public class TradeController {
     @Autowired
     private PortfolioService portfolioService;
 
+    @Autowired
+    private HistoryService historyService;
+
     @GetMapping("/buy")
     public String buyStock(
         @RequestParam String name,
@@ -27,14 +29,18 @@ public class TradeController {
 
         double total = qty * price;
 
-        if (walletService.getBalance() < total) {
-            return "Insufficient wallet balance";
+        if (walletService.deduct(total)) {
+
+            portfolioService.buy(name, qty, price);
+
+            historyService.add(
+                "BUY " + name + " Qty " + qty
+            );
+
+            return "Stock bought successfully";
         }
 
-        walletService.deductMoney(total);
-        portfolioService.buyStock(name, qty, price);
-
-        return "Stock bought successfully";
+        return "Insufficient wallet balance";
     }
 
     @GetMapping("/sell")
@@ -44,14 +50,17 @@ public class TradeController {
         @RequestParam double price
     ) {
 
-        boolean sold = portfolioService.sellStock(name, qty);
+        if (portfolioService.sell(name, qty)) {
 
-        if (!sold) {
-            return "Not enough stock quantity";
+            walletService.add(qty * price);
+
+            historyService.add(
+                "SELL " + name + " Qty " + qty
+            );
+
+            return "Stock sold successfully";
         }
 
-        walletService.addMoney(qty * price);
-
-        return "Stock sold successfully";
+        return "Not enough stock quantity";
     }
 }
