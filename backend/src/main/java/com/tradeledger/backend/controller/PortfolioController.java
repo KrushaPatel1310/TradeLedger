@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tradeledger.backend.service.PortfolioService;
 
+// Using Controller concept to provide portfolio data to frontend
 @RestController
 @RequestMapping("/api/portfolio")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -14,6 +15,6 @@ public class PortfolioController {
 
     @GetMapping
     public Object getPortfolio() {
-        return portfolioService.getPortfolio();
+        return portfolioService.getAll();
     }
 }
