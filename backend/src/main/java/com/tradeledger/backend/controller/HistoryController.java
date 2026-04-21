@@ -1,21 +1,20 @@
 package com.tradeledger.backend.controller;
 
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.tradeledger.backend.service.HistoryService;
 
+// Using Controller concept to provide transaction history to frontend
 @RestController
 @RequestMapping("/api/history")
 @CrossOrigin(origins = "http://localhost:3000")
 public class HistoryController {
 
+    @Autowired
+    private HistoryService historyService;
+
     @GetMapping
-    public List<String> getHistory() {
-
-        List<String> history = new ArrayList<>();
-
-        history.add("BUY Reliance Qty 1");
-        history.add("SELL TCS Qty 2");
-
-        return history;
+    public Object getHistory() {
+        return historyService.getAll();
     }
 }
