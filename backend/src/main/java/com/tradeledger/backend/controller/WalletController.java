@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tradeledger.backend.service.WalletService;
 
-// Controller for wallet API
+// Using Controller concept to provide wallet data to frontend
 @RestController
 @RequestMapping("/api/wallet")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -14,7 +14,7 @@ public class WalletController {
     private WalletService walletService;
 
     @GetMapping
-    public double getWalletBalance() {
+    public double getBalance() {
         return walletService.getBalance();
     }
 }
