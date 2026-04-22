@@ -1,19 +1,21 @@
 package com.tradeledger.backend.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-// Using Service layer and ArrayList concept to store transaction history
 @Service
 public class HistoryService {
 
-    private List<String> history = new ArrayList<>();
+    private List<String> history =
+            new ArrayList<>();
 
     public List<String> getAll() {
         return history;
     }
 
-    public void add(String text) {
+    public void addHistory(String text) {
         history.add(0, text);
     }
 }
