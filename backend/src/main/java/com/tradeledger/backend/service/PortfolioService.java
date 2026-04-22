@@ -1,51 +1,80 @@
 package com.tradeledger.backend.service;
 
-import java.util.*;
-import org.springframework.stereotype.Service;
-import com.tradeledger.backend.model.PortfolioItem;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-// Using Service layer and Collection Framework concept to manage portfolio stocks
+import org.springframework.stereotype.Service;
+
 @Service
 public class PortfolioService {
 
-    private List<PortfolioItem> items = new ArrayList<>();
+    private List<Map<String,Object>> portfolio =
+            new ArrayList<>();
 
-    public List<PortfolioItem> getAll() {
-        return items;
+    public List<Map<String,Object>> getAll() {
+        return portfolio;
     }
 
-    public void buy(String name, int qty, double price) {
+    public String buyStock(
+            String name,
+            int qty,
+            double price) {
 
-        for (PortfolioItem item : items) {
+        for (Map<String,Object> item : portfolio) {
 
-            if (item.getName().equalsIgnoreCase(name)) {
-                item.addQty(qty);
-                return;
+            if (item.get("name")
+                    .toString()
+                    .equalsIgnoreCase(name)) {
+
+                int oldQty =
+                        (int)item.get("qty");
+
+                item.put("qty",
+                        oldQty + qty);
+
+                return "Stock Purchased";
             }
         }
 
-        items.add(new PortfolioItem(name, qty, price));
+        Map<String,Object> stock =
+                new HashMap<>();
+
+        stock.put("name", name);
+        stock.put("qty", qty);
+        stock.put("buyPrice", price);
+
+        portfolio.add(stock);
+
+        return "Stock Purchased";
     }
 
-    public boolean sell(String name, int qty) {
+    public String sellStock(
+            String name,
+            int qty,
+            double price) {
 
-        for (PortfolioItem item : items) {
+        for (Map<String,Object> item : portfolio) {
 
-            if (item.getName().equalsIgnoreCase(name)) {
+            if (item.get("name")
+                    .toString()
+                    .equalsIgnoreCase(name)) {
 
-                if (item.getQuantity() >= qty) {
+                int oldQty =
+                        (int)item.get("qty");
 
-                    item.reduceQty(qty);
-
-                    if (item.getQuantity() == 0) {
-                        items.remove(item);
-                    }
-
-                    return true;
+                if (oldQty < qty) {
+                    return "Not Enough Qty";
                 }
+
+                item.put("qty",
+                        oldQty - qty);
+
+                return "Stock Sold";
             }
         }
 
-        return false;
+        return "Stock Not Found";
     }
 }
