@@ -1,66 +1,22 @@
 package com.tradeledger.backend.controller;
 
-import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import com.tradeledger.backend.service.*;
+import com.tradeledger.backend.service.HistoryService;
 
-// Using Controller and REST API concept to handle buy and sell stock requests
+// Controller layer for history APIs
 @RestController
-@RequestMapping("/api/trade")
+@RequestMapping("/api/history")
 @CrossOrigin(origins = "http://localhost:3000")
-public class TradeController {
-
-    @Autowired
-    private WalletService walletService;
-
-    @Autowired
-    private PortfolioService portfolioService;
+public class HistoryController {
 
     @Autowired
     private HistoryService historyService;
 
-    @GetMapping("/buy")
-    public String buyStock(
-        @RequestParam String name,
-        @RequestParam int qty,
-        @RequestParam double price
-    ) {
-
-        double total = qty * price;
-
-        if (walletService.deduct(total)) {
-
-            portfolioService.buy(name, qty, price);
-
-            historyService.add(
-                "BUY " + name + " Qty " + qty
-            );
-
-            return "Stock bought successfully";
-        }
-
-        return "Insufficient wallet balance";
-    }
-
-    @GetMapping("/sell")
-    public String sellStock(
-        @RequestParam String name,
-        @RequestParam int qty,
-        @RequestParam double price
-    ) {
-
-        if (portfolioService.sell(name, qty)) {
-
-            walletService.add(qty * price);
-
-            historyService.add(
-                "SELL " + name + " Qty " + qty
-            );
-
-            return "Stock sold successfully";
-        }
-
-        return "Not enough stock quantity";
+    // Get all history records
+    @GetMapping
+    public Object getHistory() {
+        return historyService.getAll();
     }
 }
