@@ -1,266 +1,292 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import stocks from "../data/stocks";
 
 import {
-LineChart,
-Line,
-XAxis,
-YAxis,
-Tooltip,
-ResponsiveContainer,
-CartesianGrid
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid
 } from "recharts";
 
-function StockPage(){
+function StockPage() {
 
-const { name } = useParams();
+  const { name } = useParams();
 
-const [stock,setStock] = useState(null);
-const [chartData,setChartData] = useState([]);
-const [qty,setQty] = useState(1);
+  const [stock, setStock] = useState(null);
+  const [chartData, setChartData] = useState([]);
+  const [qty, setQty] = useState(1);
 
+  /* LOAD STOCK */
+  useEffect(() => {
+    loadStock();
+  }, [name]);
 
-/* LOAD STOCK */
+  async function loadStock() {
 
-useEffect(()=>{
+    try {
 
-const foundStock = stocks.find(
-s => s.name.toLowerCase() === name.toLowerCase()
-);
+      const res = await fetch(
+        "http://localhost:8080/api/stocks"
+      );
 
-setStock(foundStock);
+      const data = await res.json();
 
-},[name]);
+      const found = data.find(
+        (item) =>
+          item.name.toLowerCase() ===
+          decodeURIComponent(name).toLowerCase()
+      );
 
+      setStock(found);
 
+      if (found) {
+        generateChart(found, "1D");
+      }
 
-/* INITIAL GRAPH (FIXED - NO WARNING) */
+    } catch (error) {
+      console.log("Stock Error");
+    }
+  }
 
-useEffect(()=>{
+  /* GRAPH */
+  function generateChart(stockData, type) {
 
-if(!stock) return;
+    let points = [];
+    let base = stockData.price;
 
-let points = [];
-let base = stock.price;
+    let total = 24;
 
-let length = 24;
+    if (type === "1D") total = 24;
+    if (type === "1M") total = 30;
+    if (type === "1Y") total = 12;
+    if (type === "2Y") total = 24;
+    if (type === "5Y") total = 60;
+    if (type === "ALL") total = 120;
 
-for(let i=0;i<length;i++){
+    for (let i = 1; i <= total; i++) {
 
-const wave = Math.sin(i/3) * 80;
-const random = (Math.random()-0.5) * 150;
+      const wave =
+        Math.sin(i / 2) * 30 +
+        Math.cos(i / 3) * 20;
 
-base = base + wave + random;
+      const random =
+        (Math.random() - 0.5) * 20;
 
-points.push({
-time:i,
-price:Math.max(100, Math.round(base))
-});
+      base = base + wave + random;
 
-}
+      if (base < 100) base = 100;
 
-setChartData(points);
+      let label = i;
 
-},[stock]);
+      if (type === "1D") label = i + ":00";
+      if (type === "1M") label = i;
+      if (type === "1Y") label = i;
+      if (type === "2Y") label = i;
+      if (type === "5Y") label = i;
+      if (type === "ALL") label = i;
 
+      points.push({
+        time: label,
+        price: Math.round(base)
+      });
 
+    }
 
-/* GRAPH FUNCTION (FOR BUTTONS) */
+    setChartData(points);
+  }
 
-function generateChart(type){
+  function changeGraph(type) {
+    generateChart(stock, type);
+  }
 
-if(!stock) return;
+  function buyStock(){
 
-let points = [];
-let base = stock.price;
-
-let length = 24;
-
-if(type==="1D") length=24;
-if(type==="1M") length=30;
-if(type==="1Y") length=50;
-if(type==="2Y") length=80;
-if(type==="5Y") length=120;
-if(type==="ALL") length=160;
-
-for(let i=0;i<length;i++){
-
-const wave = Math.sin(i/3) * 80;
-const random = (Math.random()-0.5) * 150;
-
-base = base + wave + random;
-
-points.push({
-time:i,
-price:Math.max(100, Math.round(base))
-});
-
-}
-
-setChartData(points);
-}
-
-
-
-/* BUTTONS → API PLACEHOLDER */
-
-function buyStock(){
-alert("Backend API: BUY STOCK");
-}
-
-function sellStock(){
-alert("Backend API: SELL STOCK");
-}
-
-
-
-if(!stock){
-
-return(
-<div className="content">
-<h2>Stock not found</h2>
-</div>
+fetch(
+`http://localhost:8080/api/trade/buy?name=${stock.name}&qty=${qty}&price=${stock.price}`
 )
+.then(res=>res.text())
+.then(msg=>alert(msg));
+
+}
+ function sellStock(){
+
+fetch(
+`http://localhost:8080/api/trade/sell?name=${stock.name}&qty=${qty}&price=${stock.price}`
+)
+.then(res=>res.text())
+.then(msg=>alert(msg));
 
 }
 
+  if (!stock) {
+    return (
+      <div className="content">
+        <h2>Loading Stock...</h2>
+      </div>
+    );
+  }
 
+  return (
 
-return(
+    <div className="content">
 
-<div className="content">
+      {/* HEADER */}
+      <div className="stockHeader">
 
-{/* HEADER */}
+        <h1>{stock.name}</h1>
 
-<div className="stockHeader">
+        <div className="stockPrice">
 
-<h1>{stock.name}</h1>
+          <span className="priceValue">
+            ₹{stock.price}
+          </span>
 
-<div className="stockPrice">
+          <span
+            className={
+              stock.change >= 0
+                ? "priceUp"
+                : "priceDown"
+            }
+          >
+            {stock.change >= 0 ? "▲" : "▼"}{" "}
+            {Math.abs(stock.change).toFixed(2)}%
+          </span>
 
-<span className="priceValue">
-₹{stock.price.toLocaleString()}
-</span>
+        </div>
 
-<span className={stock.change >= 0 ? "priceUp":"priceDown"}>
+      </div>
 
-{stock.change >= 0 ? "▲":"▼"} {Math.abs(stock.change).toFixed(2)}%
+      {/* BUTTONS */}
+      <div className="timeFilters">
 
-</span>
+        <button onClick={() => changeGraph("1D")}>1D</button>
+        <button onClick={() => changeGraph("1M")}>1M</button>
+        <button onClick={() => changeGraph("1Y")}>1Y</button>
+        <button onClick={() => changeGraph("2Y")}>2Y</button>
+        <button onClick={() => changeGraph("5Y")}>5Y</button>
+        <button onClick={() => changeGraph("ALL")}>ALL</button>
 
-</div>
+      </div>
 
-</div>
+      {/* GRAPH */}
+      <div
+        style={{
+          width: "100%",
+          height: 350,
+          marginTop: 20
+        }}
+      >
 
+        <ResponsiveContainer>
 
+          <LineChart data={chartData}>
 
-{/* FILTER BUTTONS */}
+            <CartesianGrid
+              stroke="#1e293b"
+              strokeDasharray="3 3"
+            />
 
-<div className="timeFilters">
+            <XAxis
+              dataKey="time"
+              stroke="#94a3b8"
+            />
 
-<button onClick={()=>generateChart("1D")}>1D</button>
-<button onClick={()=>generateChart("1M")}>1M</button>
-<button onClick={()=>generateChart("1Y")}>1Y</button>
-<button onClick={()=>generateChart("2Y")}>2Y</button>
-<button onClick={()=>generateChart("5Y")}>5Y</button>
-<button onClick={()=>generateChart("ALL")}>ALL</button>
+            <YAxis
+              stroke="#94a3b8"
+            />
 
-</div>
+            <Tooltip />
 
+            <Line
+              type="monotone"
+              dataKey="price"
+              stroke="#22c55e"
+              strokeWidth={3}
+              dot={false}
+            />
 
+          </LineChart>
 
-{/* GRAPH */}
+        </ResponsiveContainer>
 
-<div style={{width:"100%",height:350,marginTop:20}}>
+      </div>
 
-<ResponsiveContainer>
+      {/* OLD UI RESTORED */}
+      <div className="stockLayout">
 
-<LineChart data={chartData}>
+        {/* LEFT */}
+        <div className="tradePanel">
 
-<CartesianGrid stroke="#1e293b" strokeDasharray="3 3"/>
+          <h3 className="tradeTitle">
+            Trade
+          </h3>
 
-<XAxis dataKey="time" stroke="#94a3b8"/>
+          <div className="tradeInputBox">
 
-<YAxis stroke="#94a3b8"/>
+            <label>Quantity</label>
 
-<Tooltip/>
+            <input
+              type="number"
+              min="1"
+              value={qty}
+              onChange={(e) =>
+                setQty(Number(e.target.value))
+              }
+            />
 
-<Line
-type="monotone"
-dataKey="price"
-stroke="#22c55e"
-strokeWidth={3}
-dot={false}
-/>
+          </div>
 
-</LineChart>
+          <div className="tradeValue">
 
-</ResponsiveContainer>
+            Total Value: ₹
+            {(stock.price * qty).toLocaleString()}
 
-</div>
+          </div>
 
+          <div className="tradeButtons">
 
+            <button
+              className="buyBtn"
+              onClick={buyStock}
+            >
+              Buy
+            </button>
 
-<div className="stockLayout">
+            <button
+              className="sellBtn"
+              onClick={sellStock}
+            >
+              Sell
+            </button>
 
+          </div>
 
-{/* TRADE PANEL */}
+        </div>
 
-<div className="tradePanel">
+        {/* RIGHT */}
+        <div className="companyInfo">
 
-<h3 className="tradeTitle">Trade</h3>
+          <h3>
+            Company Information
+          </h3>
 
-<div className="tradeInputBox">
+          <p>
+            <b>Volume:</b> {stock.volume}
+          </p>
 
-<label>Quantity</label>
+          <p>
+            <b>Market Cap:</b> {stock.marketCap}
+          </p>
 
-<input
-type="number"
-value={qty}
-min="1"
-onChange={(e)=>setQty(Number(e.target.value))}
-/>
+        </div>
 
-</div>
+      </div>
 
-<div className="tradeValue">
-Total Value: ₹{(stock.price * qty).toLocaleString()}
-</div>
-
-<div className="tradeButtons">
-
-<button className="buyBtn" onClick={buyStock}>
-Buy
-</button>
-
-<button className="sellBtn" onClick={sellStock}>
-Sell
-</button>
-
-</div>
-
-</div>
-
-
-
-{/* COMPANY INFO */}
-
-<div className="companyInfo">
-
-<h3>Company Information</h3>
-
-<p><b>Volume:</b> {stock.volume}</p>
-<p><b>Market Cap:</b> {stock.marketCap}</p>
-
-</div>
-
-</div>
-
-</div>
-
-)
-
+    </div>
+  );
 }
 
 export default StockPage;
